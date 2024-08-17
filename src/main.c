@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.H>
 #include <time.h>
 #include <SDL2/SDL.h>
 
@@ -12,6 +13,18 @@
 #define SNAKE_W_H 25
 #define FOOD_W_H SNAKE_W_H
 
+
+void RenderCircle(SDL_Renderer *ren, int32_t cx, int32_t cy, int32_t r)
+{
+	for (int sx = cx-r; sx < cx+r; sx++)
+	{
+		for (int sy = cy-r; sy < cy+r; sy++)
+		{
+			if (((cx-sx)*(cx-sx)) + ((cy-sy)*(cy-sy)) <= r*r)
+			SDL_RenderDrawPoint(ren,sx,sy);
+		}
+	}
+}
 
 void move_snake(SDL_Rect *snake, int size,char fdir)
 {
@@ -165,7 +178,7 @@ int main(int ac,char *av[])
                 SDL_SetRenderDrawColor(ren,45,205,45,255);
 
 
-            SDL_RenderFillRect(ren,&snake[i]);
+            RenderCircle(ren,snake[i].x,snake[i].y,SNAKE_W_H/2);
         }
         
         move_snake(snake,snake_len,fdir);
@@ -202,7 +215,7 @@ int main(int ac,char *av[])
         }
 
         SDL_SetRenderDrawColor(ren,200,45,45,255);
-        SDL_RenderFillRect(ren,&food);
+        RenderCircle(ren,food.x,food.y,SNAKE_W_H/2);
 
         SDL_RenderPresent(ren);
         SDL_Delay(300);
